@@ -11,7 +11,7 @@ library(phenotypicForest)
 library(sjPlot)
 library(rcrossref)
 
-setwd("/Users/akostikova/Documents/bioinformatics_infographics_parser")
+
 abstracts <- readabs("pubmed_result.txt")
 bio_oxford <- epmc_search(query='ISSN:1367-4803', limit = 40000) #Bio Oxf
 bio_evol_online <- epmc_search(query='ISSN:1176-9343', limit = 40000) #Bio Evo Online
@@ -34,22 +34,22 @@ languages<-data.frame(matrix(nrow=length(langs@PMID),ncol=2))
 
 # loop over all abstracts that we selected at a first place
 for(i in 1:length(langs@PMID)){
-  
+
   # let's keep track of where we are
   print(i)
-  
+
   # store a PMID
   languages[i,1]<-(langs@PMID[i])
-  
+
   # get rid of end of line symbols to have a single-line abstract for grep
   cc<-str_replace_all(langs@Abstract[i], "[\r\n]" , "")
-  
+
   # now grep for keywords, ignore case
   cc<-str_extract_all(cc, regex("python|java|javascript|perl|visual basic|cobol|c\\+\\+|c#|php|ruby|matlab", ignore_case = TRUE))
-  
+
   # sometimes more than 1 language is use, let's count which is a primary language for this abstract
   vv <- names(sort(table(cc[[1]]),decreasing=T))
-  
+
   # if more than 1 - take the most frequently mentioned language
   if (length(vv) > 0){
     languages[i,2]<-tolower(vv[1])
